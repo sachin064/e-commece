@@ -20,8 +20,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
-    group = serializers.ReadOnlyField(source='get_user_groups')
-    permissions = serializers.SerializerMethodField('group_permissions')
     full_name = serializers.ReadOnlyField(source='get_full_name')
 
     class Meta:
@@ -29,9 +27,6 @@ class UserDetailSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'email', 'username', 'first_name', 'last_name', 'is_active', 'is_first_login', 'created_by',
             'full_name', 'updated_by', 'updated_on', 'created_on')
-
-    def group_permissions(self, obj):
-        return obj.groups.first().permissions.values('id', 'name')
 
 
 class PasswordChangeSerializer(serializers.Serializer):

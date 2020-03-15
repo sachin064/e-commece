@@ -52,10 +52,9 @@ class UserViewSet(viewsets.ModelViewSet):
         response = {'code': 201}
         try:
             user_data = request.data
-            user_data.update({"is_first_login": True})
             serializer = UserSerializer(data=user_data)
             if serializer.is_valid():
-                serializer = serializer.save(created_by=request.user)
+                serializer.save()
                 response.update({
                     'status': CommonResponse.STATUS_SUCCESS,
                     'message': "user created successfully",
@@ -118,10 +117,9 @@ class UserViewSet(viewsets.ModelViewSet):
         response = {'code': 400}
         try:
             user = User.objects.get(pk=pk)
-            user.groups.clear()
             user_serializer = UserDetailSerializer(user, data=request.data)
             if user_serializer.is_valid():
-                user_serializer.save(updated_by=request.user, updated_on=timezone.now())
+                user_serializer.save(updated_on=timezone.now())
                 response.update({
                     'code': 200,
                     'status': CommonResponse.STATUS_SUCCESS,
